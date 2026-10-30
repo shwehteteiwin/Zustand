@@ -2,12 +2,14 @@ import "./Column.css";
 import Task from "./Task";
 import { useStore } from "../store";
 import { useMemo, useState } from 'react';
+import classNames from "classnames";
 // import {shallow} from 'zustand'
 
 export default function Column({ state }) {
     
     const [text, setText] = useState('');
      const [open, setOpen] = useState(false);
+     const [drop,setDrop] = useState(false);
     // const tasks = useStore((store) =>
     //   store.tasks.filter((task) => task.state == state),
     // ); //error တက်လို့ (original)
@@ -29,9 +31,19 @@ const moveTask = useStore((store)=>store.moveTask);
 
 
   return (
-    <div className="column" onDragOver={
-        (e)=>{e.preventDefault();}}
+    <div className={classNames("column",{drop: drop}) }
+    onDragOver={
+        (e)=>{
+          setDrop(true);
+          e.preventDefault();}}
+
+    onDragLeave={
+      (e)=>{
+          setDrop(false);
+          e.preventDefault();}
+    }
     onDrop={()=>{
+      setDrop(false)
         // console.log(draggedTask);
         moveTask(draggedTask,state)
         setDraggedTask(null);
